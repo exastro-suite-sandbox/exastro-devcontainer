@@ -50,10 +50,13 @@ if [ $(sudo docker ps -q -f "name=${CONTAINER_NAME}" | wc -l) -eq 0 ]; then
     exit 0
 fi
 
-# HTTPD(Apache)の停止
+# HTTPD(Apache)の停止 or 再起動
 if [ "${HTTPD_STOP}" == "stop-httpd" ]; then
     echo "Stop Httpd Service"
     sudo docker exec -it ${CONTAINER_NAME} httpd -k stop
+else
+    echo "Restart Httpd Service"
+    sudo docker exec -it ${CONTAINER_NAME} httpd -k graceful
 fi
 # 指定portのプロセスを終了
 if [ "${API_PORT}" != "0" ]; then
