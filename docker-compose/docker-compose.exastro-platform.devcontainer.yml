@@ -328,3 +328,80 @@ services:
       - REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
       - NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
       - NODE_TLS_REJECT_UNAUTHORIZED=${NODE_TLS_REJECT_UNAUTHORIZED:-1}
+
+  platform-migration-dev:
+    build:
+      dockerfile: ./platform_root/platform_migration/Dockerfile
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - http_proxy=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+        - https_proxy=${HTTPS_PROXY}
+      target: develop_build
+      context: ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}
+      secrets:
+        - host_certificate_file
+    entrypoint: sh -c "sleep infinity;"
+    volumes:
+      - ..:/workspace/exastro-devcontainer:cached
+      - ../vscode/common:/workspace/.vscode:cached
+      - ../vscode/exastro-platform/platform-migration/launch.json:/workspace/.vscode/launch.json:cached
+      - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}:/workspace/exastro-it-automation-dev:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}:/workspace/exastro-platform-dev:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_library:/workspace/platform_root/platform_migration/common_library:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_resources:/workspace/platform_root/platform_migration/common_resources:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/platform_migration:/app:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_library:/app/common_library:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_resources:/app/common_resources:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/version:/app/version:cached
+      - ~/.netrc:/home/app_user/.netrc
+      - ~/.gitconfig:/home/app_user/.gitconfig
+      - ~/.config/git/ignore:/home/app_user/.config/git/ignore
+      - ${HOST_CERTIFICATE_FILE:-/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem}:/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      - /usr/share/pki/ca-trust-source/anchors/UserRootCertificate.crt:/etc/ssl/certs/ca-certificates.crt
+      - /mnt/mainte/talisman/.talismanrc:/mnt/mainte/talisman/.talismanrc
+      - ${TALISMAN_HOME}:${TALISMAN_HOME}
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../.vscode_extensions/vscode-server/extensions:/home/app_user/.vscode-server/extensions
+      - ../.vscode_extensions/vscode-server-insiders/extensions:/home/app_user/.vscode-server-insiders/extensions
+    environment:
+      - DEVCONTAINER_MAIN_SERVICE=${DEVCONTAINER_MAIN_SERVICE:-}
+      - CONTAINER_NAME=platform-migration-2
+      - SOURCE_ROOT=/workspace/exastro-platform-dev/platform_root/platform_migration
+      - FLASK_ENV=development
+      - LOG_LEVEL=DEBUG
+      - HTTP_PROXY=${HTTP_PROXY}
+      - http_proxy=${HTTP_PROXY}
+      - HTTPS_PROXY=${HTTPS_PROXY}
+      - https_proxy=${HTTPS_PROXY}
+      - NO_PROXY=127.0.0.1,localhost,keycloak,platform-auth,platform-api,platform-web,ita-api-admin,ita-api-organization,ita-api-oase-receiver,ita-api-ansible-execution-receiver,ita-web-server,${NO_PROXY}
+      - no_proxy=127.0.0.1,localhost,keycloak,platform-auth,platform-api,platform-web,ita-api-admin,ita-api-organization,ita-api-oase-receiver,ita-api-ansible-execution-receiver,ita-web-server,${NO_PROXY}
+      # - SSL_CERT_DIR=/etc/ssl/certs
+      - SSL_CERT_FILE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      - REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      - NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+      - NODE_TLS_REJECT_UNAUTHORIZED=${NODE_TLS_REJECT_UNAUTHORIZED:-1}
+      - TZ=Asia/Tokyo
+      - PYTHONIOENCODING=utf-8
+      - KEYCLOAK_USER=${KEYCLOAK_ADMIN:-admin}
+      - KEYCLOAK_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-password}
+      - API_KEYCLOAK_HOST=keycloak
+      - API_KEYCLOAK_PROTOCOL=http
+      - API_KEYCLOAK_PORT=8080
+      - DB_HOST=${PLATFORM_DB_HOST:-platform-db}
+      - DB_DATABASE=platform
+      - DB_USER=app_user
+      - DB_PASSWORD=password
+      - DB_ADMIN_USER=root
+      - DB_ADMIN_PASSWORD=password
+      - KEYCLOAK_DB_DATABASE=keycloak
+      - KEYCLOAK_DB_USER=keycloak
+      - KEYCLOAK_DB_PASSWORD=password
+      # - TIMEOUT_SECONDS_CONNECT_DB=600
+      # - TIMEOUT_SECONDS_KEYCLOAK_START=600
+      - ENCRYPT_KEY=${ENCRYPT_KEY}
+    networks:
+      - exastro
+    depends_on:
+      platform-migration-1:
+        condition: service_completed_successfully

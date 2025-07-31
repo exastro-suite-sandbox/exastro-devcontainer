@@ -1033,6 +1033,95 @@ services:
       - NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
       - NODE_TLS_REJECT_UNAUTHORIZED=${NODE_TLS_REJECT_UNAUTHORIZED:-1}
 
+  ita-migration-dev:
+    build:
+      dockerfile: ./ita_root/ita_migration/Dockerfile
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - http_proxy=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+        - https_proxy=${HTTPS_PROXY}
+      target: develop_build
+      context: ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}
+      secrets:
+        - host_certificate_file
+    entrypoint: sh -c "sleep infinity;"
+    volumes:
+      - ..:/workspace/exastro-devcontainer:cached
+      - ../vscode/common:/workspace/.vscode:cached
+      - ../vscode/exastro-it-automation/ita-migration/launch.json:/workspace/.vscode/launch.json:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}:/workspace/exastro-platform-dev:cached
+      - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}:/workspace/exastro-it-automation-dev:cached
+      - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}/ita_root/common_libs:/workspace/exastro-it-automation-dev/ita_root/ita_migration/common_libs:cached
+      - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}/ita_root/messages:/workspace/exastro-it-automation-dev/ita_root/ita_migration/messages:cached
+      - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}/ita_root/ita_migration:/exastro:cached
+      - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}/ita_root/common_libs:/exastro/common_libs:cached
+      - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}/ita_root/messages:/exastro/messages:cached
+      - ~/.netrc:/home/app_user/.netrc
+      - ~/.gitconfig:/home/app_user/.gitconfig
+      - ~/.config/git/ignore:/home/app_user/.config/git/ignore
+      - ${HOST_CERTIFICATE_FILE:-/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem}:/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      - /usr/share/pki/ca-trust-source/anchors/UserRootCertificate.crt:/etc/ssl/certs/ca-certificates.crt
+      - /mnt/mainte/talisman/.talismanrc:/mnt/mainte/talisman/.talismanrc
+      - ${TALISMAN_HOME}:${TALISMAN_HOME}
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../.vscode_extensions/vscode-server/extensions:/home/app_user/.vscode-server/extensions
+      - ../.vscode_extensions/vscode-server-insiders/extensions:/home/app_user/.vscode-server-insiders/extensions
+      - vol-ita-storage:/storage
+    environment:
+      - DEVCONTAINER_MAIN_SERVICE=${DEVCONTAINER_MAIN_SERVICE:-}
+      - CONTAINER_NAME=ita-migration
+      - SOURCE_ROOT=/workspace/exastro-it-automation-dev/ita_root/ita_migration
+      - HTTP_PROXY=${HTTP_PROXY}
+      - http_proxy=${HTTP_PROXY}
+      - HTTPS_PROXY=${HTTPS_PROXY}
+      - https_proxy=${HTTPS_PROXY}
+      - NO_PROXY=localhost,127.0.0.1,ita-api-organization,ita-api-admin,ita-web-server,platform-api
+      - no_proxy=localhost,127.0.0.1,ita-api-organization,ita-api-admin,ita-web-server,platform-api
+      # - SSL_CERT_DIR=/etc/ssl/certs
+      - SSL_CERT_FILE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      - REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      - NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+      - NODE_TLS_REJECT_UNAUTHORIZED=${NODE_TLS_REJECT_UNAUTHORIZED:-1}
+      - TZ=Asia/Tokyo
+      - ENCRYPT_KEY=${ENCRYPT_KEY}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_ADMIN_USER=${DB_ADMIN_USER}
+      - DB_ADMIN_PASSWORD=${DB_ADMIN_PASSWORD}
+      - PLATFORM_API_HOST=platform-api
+      - PLATFORM_API_PORT=8000
+      - SYSTEM_ANSIBLE_EXECUTION_LIMIT=${SYSTEM_ANSIBLE_EXECUTION_LIMIT}
+      - SYSTEM_ANSIBLE_EXECUTION_LIMIT_DESCRIPTION=${SYSTEM_ANSIBLE_EXECUTION_LIMIT_DESCRIPTION}
+      - ORG_ANSIBLE_EXECUTION_LIMIT_DEFAULT=${ORG_ANSIBLE_EXECUTION_LIMIT_DEFAULT}
+      - ORG_ANSIBLE_EXECUTION_LIMIT_MAX=${ORG_ANSIBLE_EXECUTION_LIMIT_MAX}
+      - ORG_ANSIBLE_EXECUTION_LIMIT_DESCRIPTION=${ORG_ANSIBLE_EXECUTION_LIMIT_DESCRIPTION}
+      - ORG_COMMON_MAINTENANCE_RECORDS_LIMIT_DESCRIPTION=${ORG_COMMON_MAINTENANCE_RECORDS_LIMIT_DESCRIPTION}
+      - ORG_COMMON_MAINTENANCE_RECORDS_LIMIT_MAX=${ORG_COMMON_MAINTENANCE_RECORDS_LIMIT_MAX}
+      - ORG_COMMON_MAINTENANCE_RECORDS_LIMIT_DEFAULT=${ORG_COMMON_MAINTENANCE_RECORDS_LIMIT_DEFAULT}
+      - ORG_COMMON_UPLOAD_FILE_LIMIT_DESCRIPTION=${ORG_COMMON_UPLOAD_FILE_LIMIT_DESCRIPTION}
+      - ORG_COMMON_UPLOAD_FILE_LIMIT_MAX=${ORG_COMMON_UPLOAD_FILE_LIMIT_MAX}
+      - ORG_COMMON_UPLOAD_FILE_LIMIT_DEFAULT=${ORG_COMMON_UPLOAD_FILE_LIMIT_DEFAULT}
+      - SYSTEM_MENU_EXPORT_IMPORT_BUFFER_SIZE=${SYSTEM_MENU_EXPORT_IMPORT_BUFFER_SIZE}
+      - SYSTEM_MENU_EXPORT_IMPORT_BUFFER_SIZE_DESCRIPTION=${SYSTEM_MENU_EXPORT_IMPORT_BUFFER_SIZE_DESCRIPTION}
+      - ORG_MENU_EXPORT_IMPORT_BUFFER_SIZE_DESCRIPTION=${ORG_MENU_EXPORT_IMPORT_BUFFER_SIZE_DESCRIPTION}
+      - ORG_MENU_EXPORT_IMPORT_BUFFER_SIZE_MAX=${ORG_MENU_EXPORT_IMPORT_BUFFER_SIZE_MAX}
+      - ORG_MENU_EXPORT_IMPORT_BUFFER_SIZE_DEFAULT=${ORG_MENU_EXPORT_IMPORT_BUFFER_SIZE_DEFAULT}
+      - MONGO_OPTION_SSL=${MONGO_OPTION_SSL:-FALSE}
+      - MONGO_SCHEME=${MONGO_SCHEME:-mongodb}
+      - MONGO_HOST=${MONGO_HOST-ita-mongodb}
+      - MONGO_PORT=${MONGO_PORT:-27017}
+    networks:
+      - exastro
+    depends_on:
+      ita-mariadb:
+        condition: service_healthy
+      platform-migration-2:
+        condition: service_completed_successfully
+
 
   ita-api-ansible-execution-receiver:
     build:
