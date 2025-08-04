@@ -295,8 +295,8 @@ services:
       - ../vscode/exastro-platform/platform-migration/launch.json:/workspace/.vscode/launch.json:cached
       - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}:/workspace/exastro-it-automation-dev:cached
       - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}:/workspace/exastro-platform-dev:cached
-      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_library:/workspace/platform_root/platform_migration/common_library:cached
-      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_resources:/workspace/platform_root/platform_migration/common_resources:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_library:/workspace/exastro-platform-dev/platform_root/platform_migration/common_library:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_resources:/workspace/exastro-platform-dev/platform_root/platform_migration/common_resources:cached
       - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/platform_migration:/app:cached
       - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_library:/app/common_library:cached
       - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_resources:/app/common_resources:cached
@@ -348,8 +348,8 @@ services:
       - ../vscode/exastro-platform/platform-migration/launch.json:/workspace/.vscode/launch.json:cached
       - ${ITA_REPO_ROOT:-../../exastro-it-automation-dev}:/workspace/exastro-it-automation-dev:cached
       - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}:/workspace/exastro-platform-dev:cached
-      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_library:/workspace/platform_root/platform_migration/common_library:cached
-      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_resources:/workspace/platform_root/platform_migration/common_resources:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_library:/workspace/exastro-platform-dev/platform_root/platform_migration/common_library:cached
+      - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_resources:/workspace/exastro-platform-dev/platform_root/platform_migration/common_resources:cached
       - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/platform_migration:/app:cached
       - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_library:/app/common_library:cached
       - ${PLATFORM_REPO_ROOT:-../../exastro-platform-dev}/platform_root/common_resources:/app/common_resources:cached
@@ -366,7 +366,7 @@ services:
       - ../.vscode_extensions/vscode-server-insiders/extensions:/home/app_user/.vscode-server-insiders/extensions
     environment:
       - DEVCONTAINER_MAIN_SERVICE=${DEVCONTAINER_MAIN_SERVICE:-}
-      - CONTAINER_NAME=platform-migration-2
+      - CONTAINER_NAME=platform-migration-dev
       - SOURCE_ROOT=/workspace/exastro-platform-dev/platform_root/platform_migration
       - FLASK_ENV=development
       - LOG_LEVEL=DEBUG

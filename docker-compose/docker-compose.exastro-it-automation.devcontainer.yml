@@ -1070,7 +1070,7 @@ services:
       - vol-ita-storage:/storage
     environment:
       - DEVCONTAINER_MAIN_SERVICE=${DEVCONTAINER_MAIN_SERVICE:-}
-      - CONTAINER_NAME=ita-migration
+      - CONTAINER_NAME=ita-migration-dev
       - SOURCE_ROOT=/workspace/exastro-it-automation-dev/ita_root/ita_migration
       - HTTP_PROXY=${HTTP_PROXY}
       - http_proxy=${HTTP_PROXY}
